@@ -13,11 +13,21 @@ Connection::Connection(ESP8266 *wifi, int mode, String SSID, String PASSWORD, bo
 	this->HOST_PORT=(HOST_PORT);
 }
 
-String Connection::getFirmwareVersion(){
+void Connection::start(){
+  Serial.print("Versao de Firmware ESP8266: ");
+	Serial.println(getFirmwareVersion());
+	setMode(0);
+	join();
+	enableMux();
+	startServerTCP();
+}
+
+char* Connection::getFirmwareVersion(){
 	return this->wifi->getVersion().c_str();
 }
 
 void Connection::setMode(int mode){
+	this->mode = mode;
 	if(mode == 0){
 		if (this->wifi->setOprToStationSoftAP()) {
 		    Serial.println("Station e AP: OK");

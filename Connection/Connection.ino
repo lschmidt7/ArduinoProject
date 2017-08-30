@@ -2,6 +2,7 @@
 //#include <NewPing.h>
 #include <string.h>
 #include "Connection.h"
+#include "Infos.h"
 
 //#define CH_PD 44
 //#define RST 46
@@ -14,30 +15,29 @@
 
 ESP8266 wifi(Serial1);
 
+Connection *conn = new Connection(&wifi, 0, "dlink-4", "abcd1234", true, 8090);
+  Infos *inf = new Infos(&wifi);
+
 void setup(void)
 {
 
 	Serial.begin(9600);
 	Serial1.begin(9600);
-	Connection *conn = new Connection(&wifi, 0, "dlink-4", "abcd1234", true, 8090);
+
 	Serial.println("Iniciando Setup.");
-
-	Serial.print("Versao de Firmware ESP8266: ");
-  //A funcao wifi.getVersion() retorna a versao de firmware informada pelo modulo no inicio da comunicacao
-	Serial.println(conn->getFirmwareVersion());
-
-	conn->setMode(0);
-	conn->join();
-	conn->enableMux();
-	conn->startServerTCP();
-
+	  conn->start();
+  inf->intensidade("dlink-4");
+  //Serial.println(inf->getInfoRedes());
 	Serial.println("Setup finalizado!");
 }
 
 void loop(void) {
+  if(Serial.read()=='P'){
+    inf->intensidade("dlink-4");
+  }
   // put your main code here, to run repeatedly:
-	uint8_t buffer[128] = {0};
-	static uint8_t mux_id = 0;
+	//uint8_t buffer[128] = {0};
+	//static uint8_t mux_id = 0;
 
   //if(wifi.createTCP(HOST_NAME, HOST_PORT)) {
   //   Serial.println("create TCP ok");
@@ -49,9 +49,9 @@ void loop(void) {
   //E esta variavel len serve para armazenar o comprimento de dados recebidos por meio da rotina wifi.recv(), que tambem
   //associa ao buffer os dados recebidos e ao mux_id a id responsavel pela transmissao
 
-	long distance = getDistance();
-	char str[10];
-	itoa(distance, str, 10);
+	//long distance = getDistance();
+	//char str[10];
+	//itoa(distance, str, 10);
 
   // char *request;
   //  strcpy(request, str);
@@ -75,7 +75,7 @@ void loop(void) {
 
 
 
-	char *request = (char*) "Hello computer, here is arduino!\n";
+	/*char *request = (char*) "Hello computer, here is arduino!\n";
 	Serial.print(request);
 	wifi.send(mux_id, (const uint8_t*) request, strlen(request));
 
@@ -95,12 +95,12 @@ void loop(void) {
 		Serial.print("]\n");
 	}
 
-	delay (100);
+	//delay (100);
 
 
   //  wifi.send((const uint8_t*)request, strlen(request));
   // wifi.send(request, strlen(request));
-	delay (100);
+	//delay (100);*/
 }
 
 

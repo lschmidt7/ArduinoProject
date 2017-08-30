@@ -18,7 +18,8 @@ class Connection {
 		bool MUX;
 	public:
 		Connection(ESP8266 *wifi, int mode, String SSID, String PASSWORD, bool MUX, int HOST_PORT);
-		String getFirmwareVersion();
+		void start();
+		char* getFirmwareVersion();
 		void setMode(int mode); // 0 - Station, 1 - AP
 		void join();
 		void enableMux();
