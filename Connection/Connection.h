@@ -1,3 +1,6 @@
+#ifndef CONNECTION_H
+#define CONNECTION_H
+
 /*
 * Autor: Leonardo de Abreu Schmidt
 */
@@ -7,13 +10,19 @@
 
 class Connection {
 	private:
-		ESP8266 wifi(Serial1);
-		String SSID = "dlink-4"
-		String PASSWORD = "abcd1234"
-		int HOST_PORT = (8090)
+		ESP8266 *wifi;
+		String SSID = "dlink-4";
+		String PASSWORD = "abcd1234";
+		int HOST_PORT = (8090);
+		int mode;
+		bool MUX;
 	public:
-		Connection(String mode, String SSID, String PASSWORD, bool MUX, String HOST_PORT);
+		Connection(ESP8266 *wifi, int mode, String SSID, String PASSWORD, bool MUX, int HOST_PORT);
 		String getFirmwareVersion();
+		void setMode(int mode); // 0 - Station, 1 - AP
+		void join();
+		void enableMux();
+		void startServerTCP();
+};
 
-		
-}
+#endif
