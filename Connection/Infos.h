@@ -12,14 +12,13 @@
 class Infos {
 	private:
 		ESP8266 *wifi;
-    int count=0;
-    bool habw=false;
-    bool ssidok = false;
+    	int count=0;
+    	bool habw=false;
+    	bool ssidok = false;
 	public:
 		Infos(ESP8266 *wifi);
 		String getInfoRedes();
-    void intensidade(String ssid);
-
+    	void intensidade(String ssid);
 };
 
 #endif

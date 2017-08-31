@@ -8,7 +8,7 @@ class ClientTera {
         
         String modifiedSentence;
         BufferedReader inFromUser = new BufferedReader( new InputStreamReader(System.in));
-        Socket clientSocket = new Socket("192.168.0.107", 8090);
+        Socket clientSocket = new Socket("192.168.0.104", 8090);
           //   while(true) {
                  
         DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
