@@ -17,7 +17,6 @@ Follow *followright = new Follow(A5);
 
 void setup() {
 	Serial.begin(9600);
-	setupUltrasonic();
 	motor->setup();
 	followright->setup();
 	followleft->setup();
