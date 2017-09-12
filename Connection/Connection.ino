@@ -14,25 +14,33 @@ ESP8266 wifi(Serial1);
 Connection *conn = new Connection(&wifi, 0, "dlink-4", "abcd1234", true, 8090);
 Infos *inf = new Infos(&wifi);
 Message *m = new Message(&wifi);
-
-void setup(void)
+long value;
+char buffer2[4];
+void setup()
 {
 	Serial.begin(9600);
 	Serial1.begin(9600);
 
 	Serial.println("Iniciando Setup.");
 	conn->start();
-  inf->intensidade("dlink-4");
+  //inf->intensidade("dlink-4");
 	Serial.println("Setup finalizado!");
 }
 
 void loop(void) {
-  if(Serial.read()=='P'){
-    inf->intensidade("dlink-4");
-  }
-  if(Serial.read()=='L'){
-    m->sendMsg("Olá\n");
-    delay(100);
+  value = Serial.parseInt();
+  if(value>0){
+    Serial.print("Distancia: ");
+    Serial.println(value);
+    for(int i=0;i<10;i++){
+      //strcpy(buffer2,inf->intensidade("dlink-4"));
+      //Serial.println(buffer2);
+      //strcat(buffer4,buffer2);
+      //strcat(buffer4,"Olá\n");
+      //Serial.println(buffer4);
+      m->sendMsg("Olá\n");
+      Serial.println("fadsfa");
+    }
   }
 }
 

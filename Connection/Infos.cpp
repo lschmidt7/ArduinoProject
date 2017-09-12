@@ -5,6 +5,8 @@
 #include "Infos.h"
 #include <string.h>
 
+char buffer1[4];
+
 Infos::Infos(ESP8266 *wifi) {
   this->wifi = wifi;
 }
@@ -13,8 +15,9 @@ String Infos::getInfoRedes() {
   return this->wifi->getAPList();
 }
 
-void Infos::intensidade(String ssid) {
+char* Infos::intensidade(String ssid) {
   int j = 0;
+  int t=0;
   String infs = getInfoRedes();
   for (int i = 0; i < infs.length(); i++) {
     if (j==6 && habw == false) {
@@ -27,11 +30,14 @@ void Infos::intensidade(String ssid) {
       j++;
     }
     if (habw) {
-        Serial.print(infs[i + 3]);
+        buffer1[t]=infs[i + 3];
+        t++;
     }
     if(habw && infs[i+3]==','){
       habw=false;
       Serial.println();
       }
   }
+  buffer1[3]='\0';
+  return buffer1;
 }

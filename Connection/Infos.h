@@ -18,7 +18,7 @@ class Infos {
 	public:
 		Infos(ESP8266 *wifi);
 		String getInfoRedes();
-    	void intensidade(String ssid);
+    char* intensidade(String ssid);
 };
 
 #endif

@@ -27,7 +27,7 @@ public class Cliente {
         this.ipserver = ipserver;
         this.port = port;
         try {
-            clientSocket = new Socket("192.168.0.104", 8090);
+            clientSocket = new Socket(ipserver, port);
             ListeningMsg lm = new ListeningMsg();
             lm.start();
         } catch (IOException ex) {
@@ -53,15 +53,17 @@ public class Cliente {
     
     private class ListeningMsg extends Thread{
         BufferedReader inFromServer;
+        int i=1;
         public void run(){
             while(true){
                 try {
                     inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     msg = inFromServer.readLine();
-                    System.out.println("MSG: "+msg);
+                    System.out.println("MSG "+i+": "+msg);
                 } catch (IOException ex) {
                     Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                i++;
             }
         }
     }
