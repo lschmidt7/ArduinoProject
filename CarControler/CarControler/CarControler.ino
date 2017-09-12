@@ -1,26 +1,20 @@
 #include "Motor.h"
+#include "Follow.h"
 
 /* ULTRASONIC SENSOR */
 #define trigPin A0
 #define echoPin A1
 
-/* MOTOR DRIVER BOARD */
-#define sensorLinhaEsq A4
-#define sensorLinhaDir A5
+//motor do carro
+Motor *motor = new Motor(6,7,9,8,10,11);
 
-Motor *m = new Motor(6,7,9,8,10,11);
-
-int ValorLinhaEsq, ValorLinhaDir;
-int ValorCorte = 850;
+//sensores seguidores de linha
+Follow *followleft = new Follow(A4);
+Follow *followright = new Follow(A5);
 
 void setupUltrasonic() {
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
-}
-
-void setupSensoresLinhas() {
-  pinMode(sensorLinhaEsq, INPUT);
-  pinMode(sensorLinhaDir, INPUT);
+	pinMode(trigPin, OUTPUT);
+	pinMode(echoPin, INPUT);
 }
 
 
@@ -38,56 +32,46 @@ void setupSensoresLinhas() {
 // logo o resultado é obtido em metros se considerado o tempo em segundos.
 
 long getDistance() {
-  long duration, distance;
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  duration = pulseIn(echoPin, HIGH);
-  distance = (duration / 2) / 29.1;
-  return (distance);
+	long duration, distance;
+	digitalWrite(trigPin, LOW);
+	delayMicroseconds(2);
+	digitalWrite(trigPin, HIGH);
+	delayMicroseconds(10);
+	digitalWrite(trigPin, LOW);
+	duration = pulseIn(echoPin, HIGH);
+	distance = (duration / 2) / 29.1;
+	return (distance);
 }
 
 void setup() {
-  Serial.begin(9600);
-  setupUltrasonic();
-  m->setup();
+	Serial.begin(9600);
+	setupUltrasonic();
+	motor->setup();
+	followright->setup();
+	followleft->setup();
 }
 
 void loop() {
-  m->forward();
-  long distance = getDistance();
-  //long mspeed = 255 / 20 * ( distance - 5 ) - 10;
-  long mspeed = 180;
-  if (mspeed < 0) {
-    mspeed = 0;
-  }
-  if (mspeed > 220) {
-    mspeed = 220;
-  }
-  // Serial.println(mspeed);
+	motor->forward();
+	long distance = getDistance();
+	//long mspeed = 255 / 20 * ( distance - 5 ) - 10;
+	long mspeed = 180;
+	if (mspeed < 0) {
+		mspeed = 0;
+	}
+	if (mspeed > 220) {
+		mspeed = 220;
+	}
+	// Serial.println(mspeed);
 
-  m->func();
+	m->func();
 
-  ValorLinhaEsq = analogRead(sensorLinhaEsq);
-  ValorLinhaDir = analogRead(sensorLinhaDir);
-  Serial.println(ValorLinhaEsq);
-  Serial.println("..");
-  Serial.println( ValorLinhaDir);
-  
-    if ((ValorLinhaEsq > ValorCorte) && (ValorLinhaDir > ValorCorte)) {
-      m->stop();
-    }
-    
-    // Curva para a direita
-    if ((ValorLinhaEsq > ValorCorte) && (ValorLinhaDir < ValorCorte)) {
-		  m->right();
-    }
-    
-    // Curva para a esquerda
-    if ((ValorLinhaEsq < ValorCorte) && (ValorLinhaDir > ValorCorte)) {
-      m->left();
-    }
-  delay(15);
+	if(followleft->alert() && followright->alert()){
+		m->stop();
+	}else if(followright->alert()){
+		motor->left();
+	}else if(followleft->alert()){
+		motor->right();
+	}
+	delay(15);
 }
