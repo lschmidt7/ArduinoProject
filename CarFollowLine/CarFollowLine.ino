@@ -25,11 +25,11 @@ void setup() {
 
 void loop() {
 	motor->forward();
-	m->func();
+	motor->func();
 	motor->setSpeed(180);
 
 	if(followleft->alert(ValorCorte) && followright->alert(ValorCorte)){
-		m->stop();
+		motor->stop();
 	}else if(followright->alert(ValorCorte)){
 		motor->left();
 	}else if(followleft->alert(ValorCorte)){

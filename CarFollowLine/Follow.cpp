@@ -1,5 +1,3 @@
-pinMode(sensorLinhaEsq, INPUT);
-
 #include "Follow.h"
 
 Follow::Follow(int sensor){
