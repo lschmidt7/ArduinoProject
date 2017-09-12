@@ -63,3 +63,13 @@ void Motor::func(){
 	analogWrite(this->ENA, this->speed);
 	analogWrite(this->ENB, this->speed);
 }
+
+void Motor::setSpeed(long speed){
+	this->speed = speed;
+	if (speed < 0) {
+		this->speed = 0;
+	}
+	if (speed > 220) {
+		this->speed = 220;
+	}
+}
