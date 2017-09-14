@@ -12,13 +12,13 @@ class Message {
 		ESP8266 *wifi;
 		uint8_t buffer[128] = {0};
 		uint32_t len = 0;
-  		uint8_t mux_id = 0;
+  	uint8_t mux_id = 0;
 	public:
 		Message(ESP8266 *wifi);
 		void sendMsg(char* msg);
 		void receiveMsg();
 		void showMsg();
-		char* getMessage();
+    char* getMessage();
 };
 
 #endif

@@ -1,5 +1,4 @@
 #include "ESP8266.h"
-//#include <NewPing.h>
 #include <string.h>
 #include "Connection.h"
 #include "Infos.h"

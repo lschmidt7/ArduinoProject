@@ -23,5 +23,5 @@ void Message::showMsg(){
 }
 
 char* Message::getMessage(){
-	return buffer;
+  return buffer;
 }
