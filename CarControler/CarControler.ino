@@ -2,15 +2,25 @@
 #include "Motor.h"
 #include "Connection.h"
 #include "Message.h"
+#include "Follow.h"
 
 char* command;
+
+bool pass = false;
 
 //motor do carro
 Motor *motor = new Motor(6,7,9,8,10,11);
 
+//sensores seguidores de linha
+Follow *followmiddle = new Follow(A3);
+Follow *followleft = new Follow(A4);
+Follow *followright = new Follow(A5);
+
 ESP8266 wifi(Serial1);
 
-Connection *conn = new Connection(&wifi, 0, "arduino", "arduino", true, 8090);
+int ValorCorte = 850;
+
+Connection *conn = new Connection(&wifi, 0, "dlink-4", "abcd1234", true, 8090);
 Message *m = new Message(&wifi);
 
 void setup() {
@@ -18,11 +28,17 @@ void setup() {
 	Serial1.begin(9600);
 	motor->setup();
 	conn->start();
+  followright->setup();
+  followleft->setup();
+  followmiddle->setup();
 }
 
 void loop() {
 	m->receiveMsg();
-	motor->setSpeed(180);
+  m->showMsg();
+  m->sendMsg("passar");
+  motor->func();
+	motor->setSpeed(220);
 	command = m->getMessage();
 	if(command[0]=='a'){
 		motor->forward();
@@ -33,7 +49,6 @@ void loop() {
 	}else{
 	  motor->stop();
 	}
-
-	motor->func();
+ 
 	delay(15);
 }
