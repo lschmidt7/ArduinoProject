@@ -10,7 +10,8 @@ class Follow{
 		Follow(int sensor);
 		void setup();
 		int read();
-		bool alert(int treshold);
+		bool alertMin(int treshold);
+    bool alertMax(int treshold);
 };
 
 #endif

@@ -1,3 +1,8 @@
+
+import java.awt.Color;
+import javax.swing.DefaultListModel;
+import javax.swing.ListModel;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -10,11 +15,14 @@
  */
 public class Main extends javax.swing.JFrame {
 
+    Server servidor;
+    
     /**
      * Creates new form Main
      */
     public Main() {
         initComponents();
+        servidor = new Server(carsInTraffic);
     }
 
     /**
@@ -30,14 +38,15 @@ public class Main extends javax.swing.JFrame {
         ip = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         port = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        btnadd = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        iplist = new javax.swing.JList<>();
         jLabel3 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        btnrun = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList<>();
+        carsInTraffic = new javax.swing.JList<>();
         jLabel4 = new javax.swing.JLabel();
+        btnstart = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -78,22 +87,40 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setBackground(new java.awt.Color(102, 102, 255));
-        jButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jButton1.setText("Add");
+        btnadd.setBackground(new java.awt.Color(102, 102, 255));
+        btnadd.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnadd.setText("Add");
+        btnadd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnaddActionPerformed(evt);
+            }
+        });
 
-        jScrollPane1.setViewportView(jList1);
+        jScrollPane1.setViewportView(iplist);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel3.setText("IP List");
 
-        jButton2.setBackground(new java.awt.Color(102, 102, 255));
-        jButton2.setText("Run");
+        btnrun.setBackground(new java.awt.Color(102, 102, 255));
+        btnrun.setText("Run");
+        btnrun.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnrunActionPerformed(evt);
+            }
+        });
 
-        jScrollPane2.setViewportView(jList2);
+        jScrollPane2.setViewportView(carsInTraffic);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setText("Traffic");
+
+        btnstart.setBackground(new java.awt.Color(102, 102, 255));
+        btnstart.setText("Start");
+        btnstart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnstartActionPerformed(evt);
+            }
+        });
 
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
@@ -110,7 +137,11 @@ public class Main extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnrun)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnstart)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -130,7 +161,7 @@ public class Main extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(port, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
-                                        .addComponent(jButton1)))
+                                        .addComponent(btnadd)))
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
@@ -143,7 +174,7 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(ip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
                     .addComponent(port, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(btnadd))
                 .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -153,7 +184,9 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnrun)
+                    .addComponent(btnstart))
                 .addContainerGap())
         );
 
@@ -161,25 +194,64 @@ public class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ipMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ipMouseClicked
-        if(ip.getText().equals("IP address..."))
+        if(ip.getText().equals("IP address...")){
             ip.setText("");
+            ip.setForeground(Color.black);
+        }
     }//GEN-LAST:event_ipMouseClicked
 
     private void portMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_portMouseClicked
-        if(port.getText().equals("Port number..."))
+        if(port.getText().equals("Port number...")){
             port.setText("");
+            port.setForeground(Color.black);
+        }
     }//GEN-LAST:event_portMouseClicked
 
     private void portFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_portFocusLost
-        if(port.getText().equals(""))
+        if(port.getText().equals("")){
             port.setText("Port number...");
+            port.setForeground(Color.gray);
+        }
     }//GEN-LAST:event_portFocusLost
 
     private void ipFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ipFocusLost
-        if(ip.getText().equals(""))
+        if(ip.getText().equals("")){
             ip.setText("IP address...");
+            ip.setForeground(Color.gray);
+        }
     }//GEN-LAST:event_ipFocusLost
 
+    private void btnaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaddActionPerformed
+        Car c = new Car();
+        c.ip = ip.getText();
+        c.port = Integer.parseInt(port.getText());
+        servidor.add(c);
+        
+        port.setText("Port number...");
+        port.setForeground(Color.gray);
+        ip.setText("IP address...");
+        ip.setForeground(Color.gray);
+        
+        UpdateIPList();
+    }//GEN-LAST:event_btnaddActionPerformed
+
+    private void btnrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnrunActionPerformed
+        servidor.init();
+    }//GEN-LAST:event_btnrunActionPerformed
+
+    private void btnstartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnstartActionPerformed
+        servidor.start();
+    }//GEN-LAST:event_btnstartActionPerformed
+
+    private void UpdateIPList(){
+        DefaultListModel<String> model = new DefaultListModel<String>();
+        for(Car c : servidor.cars){
+            model.addElement(c.ip);
+        }
+        iplist.setModel(model);
+        //iplist.setSelectedIndex(0);
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -216,15 +288,16 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnadd;
+    private javax.swing.JButton btnrun;
+    private javax.swing.JButton btnstart;
+    private javax.swing.JList<String> carsInTraffic;
     private javax.swing.JTextField ip;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JList<String> iplist;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JList<String> jList1;
-    private javax.swing.JList<String> jList2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;

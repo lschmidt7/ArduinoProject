@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JList;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -27,10 +28,10 @@ public class Server {
     ArrayList<Car> cars = new ArrayList<Car>();
     ArrayList<Socket> sockets = new ArrayList<Socket>();
     
-    Traffic t = new Traffic();
+    Traffic t;
 
-    public Server() {
-
+    public Server(JList carsInTraffic) {
+        t = new Traffic(carsInTraffic);
     }
     
     // Add um novo socket
@@ -51,12 +52,18 @@ public class Server {
         }
     }
     
+    public void start(){
+        for(Socket s : sockets){
+            send("s", s);
+        }
+    }
+    
     public void send(String command, Socket s){
         BufferedReader buffer = new BufferedReader( new InputStreamReader(System.in));
         DataOutputStream outToServer;
         try {
             outToServer = new DataOutputStream(s.getOutputStream());
-            outToServer.writeBytes(command + '\0');
+            outToServer.writeBytes(command + '\n');
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -80,19 +87,20 @@ public class Server {
                     buffer = new BufferedReader(new InputStreamReader(s.getInputStream()));
                     msg = buffer.readLine();
                     
-                    System.out.println("MSG : "+msg);
-                    
-                    if(msg.equals(P2C.ORDER_PASS)){
+                    System.out.println("MSG : "+msg+" "+P2C.ORDER_PASS.charAt(0));
+                    if(msg.charAt(0)==P2C.ORDER_PASS.charAt(0)){
                         t.add(c,s);
-                        if(t.isEmpty()){
+                        if(!t.isEmpty()){
+                            System.out.println("ORDER_PASS");
                             t.freeFirst();
                             send(P2C.FREE,s);
                         }
                     }
                     
-                    if(msg.equals(P2C.ORDER_EXIT)){
+                    if(msg.equalsIgnoreCase(P2C.ORDER_EXIT)){
                         t.pop();
                         if(!t.isEmpty()){
+                            System.out.println("ORDER_PASS");
                             t.freeFirst();
                             send(P2C.FREE,t.getFirst());
                         }
