@@ -1,3 +1,5 @@
+package auxiliar;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,10 +15,11 @@ import java.util.logging.Logger;
  */
 
 /**
- *
+ * servidor ivertido
  * @author Leonardo
  */
 public class Cliente {
+    
     
     private String ipserver = "";
     private int port = 8090;
@@ -59,7 +62,9 @@ public class Cliente {
                 try {
                     inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     msg = inFromServer.readLine();
-                    System.out.println("MSG "+i+": "+msg);
+                    
+                    
+                    
                 } catch (IOException ex) {
                     Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
                 }
